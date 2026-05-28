@@ -82,7 +82,7 @@ def create_customer():
         return jsonify(e.messages), 400
     
     query = select(Customer).where(Customer.email == customer_data['email'])
-    existing_customer = db.session.execute(query).scalars().all()
+    existing_customer = db.session.execute(query).scalar_one_or_none()
     
     if existing_customer:
             return jsonify({'error': 'Email already associated with an account'}), 400
@@ -99,15 +99,15 @@ def get_customers():
     query = select(Customer)
     customers = db.session.execute(query).scalars().all()
 
-    return customers_schema.jsonify(customers)
+    return jsonify(customers_schema.dump(customers))
 
 #Retreive customer by ID
-@app.route("/customers<int:customer_id>", methods=['GET'])
+@app.route("/customers/<int:customer_id>", methods=['GET'])
 def get_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
 
     if customer:
-        return customer_schema.jsonify(customer), 200
+        return jsonify(customer_schema.dump(customer)), 200
     return jsonify({"error": "Customer not found."}), 404
 
 #Update Customer
@@ -127,7 +127,7 @@ def update_customer(customer_id):
         setattr(customer, key, value)
 
     db.session.commit()
-    return customer_schema.jsonify(customer), 200
+    return jsonify(customer_schema.dump(customer)), 200
 
 
 #Delete Customer
@@ -136,7 +136,7 @@ def delete_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
 
     if not customer: 
-        return jsonify({'error': 'Member not found.'}), 404
+        return jsonify({'error': 'Customer not found.'}), 404
     
     db.session.delete(customer)
     db.session.commit()
