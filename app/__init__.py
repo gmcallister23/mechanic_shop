@@ -5,6 +5,8 @@ from flask import Flask
 from .extensions import ma #relative path, using because we are in a sister folder
 from .models import db
 from .Blueprints.customers import customers_bp
+from .Blueprints.mechanics import mechanics_bp
+from .Blueprints.service_tickets import service_tickets_bp
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -17,5 +19,7 @@ def create_app(config_name):
 
     # register blueprints
     app.register_blueprint(customers_bp, url_prefix='/customers')
+    app.register_blueprint(mechanics_bp, url_prefix='/mechanics')
+    app.register_blueprint(service_tickets_bp, url_prefix='/service_tickets')
 
     return app
