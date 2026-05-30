@@ -17,7 +17,7 @@ def create_mechanic():
         return jsonify(e.messages), 400
     
     query = select(Mechanic).where(Mechanic.email == mechanic_data['email'])
-    existing_mechanic = db.session.execute(query).scalar.one_or_none()
+    existing_mechanic = db.session.execute(query).scalar_one_or_none()
 
     if existing_mechanic:
         return jsonify({'error': 'Email is already associated with account'}), 400
@@ -32,7 +32,7 @@ def create_mechanic():
 @mechanics_bp.route('/', methods=['GET'])
 def get_mechanics():
     query = select(Mechanic)
-    mechanics = db.session.execute(query).scalars.all()
+    mechanics = db.session.execute(query).scalars().all()
 
     return jsonify(mechanics_schema.dump(mechanics))
 

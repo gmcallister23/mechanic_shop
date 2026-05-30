@@ -15,11 +15,11 @@ def create_service_ticket():
     except ValidationError as e:
         return jsonify(e.messages), 400
     
-    query = select(Service_ticket).where(Service_ticket.id == service_ticket_data['id'])
-    existing_service_ticket = db.session.execute(query).scalar.one_or_none()
+    #query = select(Service_ticket).where(Service_ticket.id == service_ticket_data['id'])
+    #existing_service_ticket = db.session.execute(query).scalar_one_or_none()
 
-    if existing_service_ticket:
-        return jsonify({'error': 'Id already associated with a service ticket'}), 400
+    # if existing_service_ticket:
+    #     return jsonify({'error': 'Id already associated with a service ticket'}), 400
     
     new_service_ticket = Service_ticket(**service_ticket_data)
 
