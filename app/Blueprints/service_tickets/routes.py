@@ -41,8 +41,8 @@ def assign_mechanic(service_ticket_id, mechanic_id):
         service_ticket.mechanics.append(mechanic)
 
     db.session.commit()
-
-    return jsonify ({'message': f'Mechanic {mechanic_id} assigned to ticket {service_ticket_id}'}), 200
+    return jsonify(service_ticket_schema.dump(service_ticket), {'message': f'Mechanic {mechanic_id} assigned to ticket'}), 200
+    #return jsonify ({'message': f'Mechanic {mechanic_id} assigned to ticket {service_ticket_id}'}), 200
 
 #Update service ticket to remove the mechanic by id - removes the relationship between mechanic and service ticket
 @service_tickets_bp.route('/<int:service_ticket_id>/remove-mechanic/<int:mechanic_id>', methods=['PUT'])
