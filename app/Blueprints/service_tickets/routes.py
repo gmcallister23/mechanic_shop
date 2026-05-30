@@ -29,7 +29,7 @@ def create_service_ticket():
 
 #Update service ticket to add mechanic by id
 @service_tickets_bp.route('/<int:service_ticket_id>assign-mechanic/<int:mechanic_id>', methods=['PUT'])
-def assign_mechanic(service_ticket_id, mechanic_id)
+def assign_mechanic(service_ticket_id, mechanic_id):
     
     service_ticket = Service_ticket.query.get(service_ticket_id)
     mechanic = Mechanic.query.get(mechanic_id)
