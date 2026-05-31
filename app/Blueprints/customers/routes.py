@@ -5,7 +5,7 @@ from sqlalchemy import select
 from app.models import Customer, db
 from . import customers_bp
 from app.extensions import limiter, cache
-from app.utils.util import encode_token
+from app.utils.util import encode_token, token_required
 
 #Customer login
 
@@ -82,6 +82,7 @@ def get_customer(customer_id):
 #Update Customer
 @customers_bp.route("/<int:customer_id>", methods=['PUT'])
 @limiter.limit('4 per month')
+@token_required
 def update_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
 
@@ -101,8 +102,9 @@ def update_customer(customer_id):
 
 
 #Delete Customer
-@customers_bp.route("/<int:customer_id>", methods=['DELETE'])
+@customers_bp.route("/<int:customer_id>", methods=['DELETE']) #removed customer_id paramater, because token_required holds user information
 @limiter.limit('5 per day')
+@token_required
 def delete_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
 
