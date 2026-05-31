@@ -31,10 +31,21 @@ def create_mechanic():
 #Retreive All Mechanics
 @mechanics_bp.route('/', methods=['GET'])
 def get_mechanics():
-    query = select(Mechanic)
-    mechanics = db.session.execute(query).scalars().all()
 
-    return jsonify(mechanics_schema.dump(mechanics))
+    try: 
+        page = int(request.args.get('page'))
+        per_page = int(request.args.get('per_page'))
+        query = select(Mechanic)
+        mechanics = db.paginate(query, page=page, per_page=per_page)
+        return mechanics_schema.jsonify(mechanics), 200
+    except:    
+
+        query = select(Mechanic)
+        mechanics = db.session.execute(query).scalars().all()
+
+        return jsonify(mechanics_schema.dump(mechanics))
+
+#pagination: /books?page=(int)&per_page=(int)
 
 #Retreive mechanic by ID
 @mechanics_bp.route('/<int:mechanic_id>', methods=['GET'])
@@ -89,3 +100,14 @@ def popular_mechanics():
 
     # for mechanic in mechanics: 
     #     print(mechanic.name, len(mechanic.service_tickets) )
+
+@mechanics_bp.route('/search', methods=['GET'])
+def search_mechanics():
+    name = request.args.get('name')
+
+    query = select(Mechanic).where(Mechanic.name.like(name))
+    #query = select(Mechanic).where(Mechanic.name.like(f'%{name}%')) this adds wildcards, so that anything that matches the search shows up
+    mechanics = db.session.execute(query).scalars().all()
+
+    return mechanics_schema.jsonify(mechanics)
+
