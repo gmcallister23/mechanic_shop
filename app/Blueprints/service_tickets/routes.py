@@ -1,9 +1,10 @@
-from .schemas import service_ticket_schema, service_tickets_schema
+from .schemas import service_ticket_schema, service_tickets_schema, edit_service_tickets_schema, return_service_tickets_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Service_ticket, Mechanic, db
 from . import service_tickets_bp
+from utils.util import token_required
 
 ##Service Tickets API
 
@@ -69,5 +70,39 @@ def get_service_tickets():
 
     return jsonify(service_ticket_schema.dump(service_tickets))
 
+@service_tickets_bp.route('/my-tickets', methods=['GET'])
+@token_required
+def get_my_service_tickets(customer_id):
+    query = select(Service_ticket).where(Service_ticket.customer_id == customer_id)
+
+    service_tickets = db.session.execute(query).scalars().all()
+
+    return service_tickets_schema.jsonify(service_tickets), 200
 
 
+@service_tickets_bp.route('/<int: service_ticket_id>', methods=['PUT'])
+def edit_service_ticket(service_ticket_id):
+    try:
+        ticket_edits = edit_service_tickets_schema.load(request.json)
+    except ValidationError as e:
+        return jsonify(e.messages), 400
+    
+    query = select(Service_ticket).where(Service_ticket.id == service_ticket_id)
+    service_tickets = db.session.execute(query).scalars().first()
+
+    for mechanic_id in ticket_edits['add_mechanic_ids']:
+        query = select(Mechanic).where(Mechanic.id == mechanic_id)
+        mechanic = db.session.execute(query).scalars().first()
+
+        if mechanic and mechanic not in service_tickets.mechanic:
+            service_tickets.mechanic.append(mechanic)
+
+    for mechanic_id in ticket_edits['remove_mechanic_ids']:
+        query = select(Mechanic).where(Mechanic.id == mechanic_id)
+        mechanic = db.session.execute(query).scalars().first()
+
+        if mechanic and mechanic not in service_tickets.mechanic:
+            service_tickets.mechanic.remove(mechanic)
+
+    db.session.commit()
+    return return_service_tickets_schema.jsonify(service_tickets)
