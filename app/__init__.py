@@ -2,7 +2,7 @@
 
 from flask import Flask
 #absolute path from app.extensions import ma
-from .extensions import ma #relative path, using because we are in a sister folder
+from .extensions import ma, limiter #relative path, using because we are in a sister folder
 from .models import db
 from .Blueprints.customers import customers_bp
 from .Blueprints.mechanics import mechanics_bp
@@ -16,7 +16,8 @@ def create_app(config_name):
 
     ma.init_app(app)
     db.init_app(app)
-
+    limiter.init_app(app)
+    
     # register blueprints
     app.register_blueprint(customers_bp, url_prefix='/customers')
     app.register_blueprint(mechanics_bp, url_prefix='/mechanics')

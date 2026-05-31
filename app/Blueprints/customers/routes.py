@@ -4,11 +4,13 @@ from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Customer, db
 from . import customers_bp
+from app.extensions import limiter
 
 ##API Routes
 
 #Create customers
 @customers_bp.route('/', methods=['POST'])
+@limiter.limit('5 per day') #limit requests to certain number per timeframe
 def create_customer():
     try:
         customer_data = customer_schema.load(request.json)
@@ -46,6 +48,7 @@ def get_customer(customer_id):
 
 #Update Customer
 @customers_bp.route("/<int:customer_id>", methods=['PUT'])
+@limiter.limit('4 per month')
 def update_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
 
@@ -66,6 +69,7 @@ def update_customer(customer_id):
 
 #Delete Customer
 @customers_bp.route("/<int:customer_id>", methods=['DELETE'])
+@limiter.limit('5 per day')
 def delete_customer(customer_id):
     customer = db.session.get(Customer, customer_id)
 
