@@ -9,7 +9,7 @@ def reset_database():
 
 if __name__== "__main__":
     with app.app_context():
-        #reset_database()
+        #reset_database() #Comment and un comment as needed
         db.create_all()
 
     app.run(debug=True)
