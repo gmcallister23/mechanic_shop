@@ -58,3 +58,11 @@ class Mechanic(Base):
     title: Mapped[str] = mapped_column(db.String(255), nullable=False)
 
     service_tickets: Mapped[List['Service_ticket']] = db.relationship(secondary=service_mechanics, back_populates='mechanics')
+
+class Inventory(Base):
+    __tablename__ = 'inventory'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    part_name: Mapped[str] = mapped_column(db.String(250), nullable=False)
+    price: Mapped[float] = mapped_column(db.Float(25), nullable=False)
+
