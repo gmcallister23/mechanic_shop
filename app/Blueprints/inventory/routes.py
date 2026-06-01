@@ -35,7 +35,7 @@ def get_all_inventory():
         return jsonify(inventory_schema.dump(inventory))
 
 
-@inventory_bp.route('/<int: invenotory_id>', methods=['GET'])
+@inventory_bp.route('/<int:invenotory_id>', methods=['GET'])
 def get_inventory(inventory_id):
     inventory = db.session.get(Inventory, inventory_id)
 
@@ -44,7 +44,7 @@ def get_inventory(inventory_id):
     return jsonify({'error': 'Inventory not found'}), 404
 
 #Put
-@inventory_bp.route('/<int: inventory_id>', methods=['PUT'])
+@inventory_bp.route('/<int:inventory_id>', methods=['PUT'])
 def update_inventory(inventory_id):
     inventory = db.session.get(Inventory, inventory_id)
 
@@ -64,7 +64,7 @@ def update_inventory(inventory_id):
     return jsonify(inventory_schema.dump(inventory)), 200
 
 #Delete
-@inventory_bp.route('/<int: inventory_id>', methods=['DELETE'])
+@inventory_bp.route('/<int:inventory_id>', methods=['DELETE'])
 def delete_inventory(inventory_id):
     inventory = db.session.get(Inventory, inventory_id)
 
