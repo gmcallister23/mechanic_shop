@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Service_ticket, Mechanic, db
 from . import service_tickets_bp
-from utils.util import token_required
+from app.utils.util import token_required
 
 ##Service Tickets API
 
