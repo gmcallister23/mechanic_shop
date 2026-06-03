@@ -2,7 +2,7 @@ from .schemas import service_ticket_schema, service_tickets_schema, edit_service
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
-from app.models import Service_ticket, Mechanic, db
+from app.models import Service_ticket, Mechanic, Inventory, Service_ticketInventory, db
 from . import service_tickets_bp
 from app.utils.util import token_required
 
@@ -106,3 +106,30 @@ def edit_service_ticket(service_ticket_id):
 
     db.session.commit()
     return return_service_tickets_schema.jsonify(service_tickets)
+
+@service_tickets_bp.route('/<int:service_ticket_id/add-part>', methods=['PUT'])
+def add_part_to_service_ticket(service_ticket_id):
+    
+    inventory_id = request.json('inventory_id')
+    quantity = request.json('quantity')
+
+    service_ticket = db.session.get(Service_ticket, service_ticket_id)
+    part = db.session.get(Inventory, inventory_id)
+
+    if not service_ticket:
+        return jsonify({'error': 'Ticket not found'}), 400
+    
+    if not part:
+        return jsonify({'error': 'Part not found'}), 400
+    
+    service_ticket_part = Service_ticketInventory(
+        service_ticket_id = service_ticket.id,
+        inventory_id = part.id,
+        quantity = quantity
+    )
+    
+    db.session.add(service_ticket_part)
+    db.session.commit()
+
+    return jsonify({'messages': 'Part added to ticket'}), 200
+
