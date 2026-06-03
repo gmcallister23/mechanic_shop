@@ -9,41 +9,41 @@ SECRET_KEY = 'super secret secrets'
 
 def encode_token(customer_id):
     payload = {
-        'exp': datetime.now(timezone.utc) + timedelta(day=0, hours=1),
+        'exp': datetime.now(timezone.utc) + timedelta(hours=1),
         'iat': datetime.now(timezone.utc),
         'sub': customer_id,
     }
 
-    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    token = jwt.encode(payload, SECRET_KEY, algorithms=['HS256'])
     return token
 
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
+        
 
-        if 'Authorization' in request.headers:
+        auth_header = request.headers.get('Authorization')
 
-            token = request.headers('Authorization').split()[1]
-
-            if not token:
-                return jsonify({'message': 'missing token'}), 400
+        if not auth_header:
+            return jsonify({'message': 'Missing token'}), 401
+        
             
-            try: 
-                data = jwt.decode(token, SECRET_KEY,algorithms='HS256')
-                print(data)
-                customer_id = data('sub')
+        try:
+            token = auth_header.split('')[1] 
             
-            except jwt.ExpiredSignatureError as e: 
+            data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            print(data)
+            customer_id = data['sub']
+            
+        except jwt.ExpiredSignatureError as e: 
                 return jsonify({'message': 'token expired'}), 400
             
-            except jwt.InvalidTokenError as e:
+        except jwt.InvalidTokenError as e:
                 return jsonify({'message': 'Invalid token'}), 400
             
-            return f(customer_id, *args, **kwargs)
+        return f(customer_id, *args, **kwargs)
             
-        else: 
-            return jsonify({'message': 'You must be logged in to access this.'}), 400
+        
         
     return decorated
 

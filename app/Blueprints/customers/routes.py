@@ -1,8 +1,8 @@
-from .schemas import customer_schema, customers_schema, login_schema
+from .schemas import customer_schema, customers_schema, login_schema, service_tickets_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
-from app.models import Customer, db
+from app.models import Customer, Service_ticket, db
 from . import customers_bp
 from app.extensions import limiter, cache
 from app.utils.util import encode_token, token_required
@@ -85,6 +85,15 @@ def get_customer(customer_id):
     if customer:
         return jsonify(customer_schema.dump(customer)), 200
     return jsonify({"error": "Customer not found."}), 404
+
+#Get all tickets for a specific customer
+@customers_bp.route('/my-tickets', methods=['GET'])
+@token_required
+def get_my_tickets(customer_id):
+    tickets = db.session.execute(select(Service_ticket).where(Service_ticket.customer_id == customer_id)).scalars().all()
+
+    return jsonify(service_tickets_schema.dump(tickets)), 200
+
 
 #Update Customer
 @customers_bp.route("/<int:customer_id>", methods=['PUT'])
