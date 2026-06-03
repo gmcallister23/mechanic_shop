@@ -107,7 +107,7 @@ def edit_service_ticket(service_ticket_id):
     db.session.commit()
     return return_service_tickets_schema.jsonify(service_tickets)
 
-@service_tickets_bp.route('/<int:service_ticket_id/add-part>', methods=['PUT'])
+@service_tickets_bp.route('/<int:service_ticket_id>/add-inventory', methods=['PUT'])
 def add_part_to_service_ticket(service_ticket_id):
     
     inventory_id = request.json('inventory_id')

@@ -1,4 +1,5 @@
-from .schemas import customer_schema, customers_schema, login_schema, service_tickets_schema
+from .schemas import customer_schema, customers_schema, login_schema
+from ..service_tickets.schemas import service_tickets_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
@@ -9,7 +10,7 @@ from app.utils.util import encode_token, token_required
 
 #Customer login
 
-@customers_bp.route('/', methods=['POST'])
+@customers_bp.route('/login', methods=['POST'])
 def login():
 
     try:
