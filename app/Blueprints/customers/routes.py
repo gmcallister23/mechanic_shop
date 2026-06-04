@@ -6,13 +6,13 @@ from sqlalchemy import select
 from app.models import Customer, Service_ticket, db
 from . import customers_bp
 from app.extensions import limiter, cache
-from app.utils.util import encode_token, token_required
+from app.utils.util import encode_token, token_required, SECRET_KEY
 
 #Customer login
 
 @customers_bp.route('/login', methods=['POST'])
 def login():
-
+    
     try:
 
         credentials = login_schema.load(request.json)
@@ -27,7 +27,7 @@ def login():
 
     if customer and customer.password == password:
         token = encode_token(customer.id)
-
+        
         response = {
             'status': 'success',
             'message': 'Suscessfully logged in.',
