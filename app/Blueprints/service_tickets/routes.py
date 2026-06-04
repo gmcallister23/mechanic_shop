@@ -94,7 +94,7 @@ def get_my_service_tickets(customer_id):
     return service_tickets_schema.jsonify(service_tickets), 200
 
 
-@service_tickets_bp.route('/<int:service_ticket_id>', methods=['PUT'])
+@service_tickets_bp.route('/<int:service_ticket_id>/edit', methods=['PUT'])
 def edit_service_ticket(service_ticket_id):
     try:
         ticket_edits = edit_service_tickets_schema.load(request.json)
@@ -121,11 +121,11 @@ def edit_service_ticket(service_ticket_id):
     db.session.commit()
     return return_service_tickets_schema.jsonify(service_tickets)
 
-@service_tickets_bp.route('/<int:service_ticket_id>/add-inventory', methods=['PUT'])
+@service_tickets_bp.route('/<int:service_ticket_id>/add-inventory', methods=['POST'])
 def add_part_to_service_ticket(service_ticket_id):
     
-    inventory_id = request.json('inventory_id')
-    quantity = request.json('quantity')
+    inventory_id = request.json.get('inventory_id')
+    quantity = request.json.get('quantity')
 
     service_ticket = db.session.get(Service_ticket, service_ticket_id)
     part = db.session.get(Inventory, inventory_id)
