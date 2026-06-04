@@ -37,7 +37,7 @@ def login():
         return jsonify(response), 200
     
     else:
-        jsonify({'message': 'invalid email or password'})
+        return jsonify({'message': 'invalid email or password'}),401
 
 ##API Routes
 

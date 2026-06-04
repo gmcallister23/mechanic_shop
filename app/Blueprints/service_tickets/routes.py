@@ -1,7 +1,7 @@
 from .schemas import service_ticket_schema, service_tickets_schema, edit_service_tickets_schema, return_service_tickets_schema
 from flask import request, jsonify
 from marshmallow import ValidationError
-from sqlalchemy import select
+from sqlalchemy import select, text
 from app.models import Service_ticket, Mechanic, Inventory, Service_ticketInventory, db
 from . import service_tickets_bp
 from app.utils.util import token_required
@@ -64,11 +64,25 @@ def remove_mechanic(service_ticket_id, mechanic_id):
 
 #Retreive all tickets
 @service_tickets_bp.route('/', methods=['GET'])
+# def debug():
+#     raw = db.session.execute(text("SELECT * FROM service_tickets")).fetchall()
+#     orm = db.session.execute(select(Service_ticket)).scalars().all()
+
+#     return {
+#         "raw_sql_count": len(raw),
+#         "orm_count": len(orm)
+#     }
+
 def get_service_tickets():
     query = select(Service_ticket)
     service_tickets = db.session.execute(query).scalars().all()
 
-    return jsonify(service_ticket_schema.dump(service_tickets))
+    print(service_tickets)
+    print(Service_ticket.__module__)
+    print(Service_ticket.__table__.fullname)
+    print(Service_ticket.metadata is db.Model.metadata)
+
+    return jsonify(service_tickets_schema.dump(service_tickets))
 
 @service_tickets_bp.route('/my-tickets', methods=['GET'])
 @token_required
