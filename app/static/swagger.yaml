@@ -11,4 +11,41 @@ consumes:
 produces:
   - "applications/json"
 paths:
+  /customers/login:
+  post:
+    tags:
+      - customers
+    summary: "Login endpoint, (generates token)"
+    description: "Validates member credentials, generates and return a member specific token"
+    parameter:
+      - in: "body"
+        name: "body"
+        description: "Login Credentials"
+        required: true
+        schema:
+          $ref: "#/definitions/LoginCredentials"
 definitions:
+
+  LoginCredentials:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+
+    required:
+      - email
+      - password
+  
+  LoginResponse:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      message:
+        type: "string"
+      status:
+        type: "string"
+      
+
