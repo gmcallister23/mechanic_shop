@@ -43,7 +43,7 @@ def login():
 
 #Create customers
 @customers_bp.route('/', methods=['POST'])
-@limiter.limit('5 per day') #limit requests to certain number per timeframe
+@limiter.limit('3 per day') #limit requests to certain number per timeframe
 def create_customer():
     try:
         customer_data = customer_schema.load(request.json)
