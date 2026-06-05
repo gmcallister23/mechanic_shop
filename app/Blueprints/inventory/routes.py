@@ -5,6 +5,7 @@ from sqlalchemy import select
 from app.models import Inventory, db
 from . import inventory_bp
 from sqlalchemy import select
+from app.extensions import cache
 
 #Post
 @inventory_bp.route('/', methods=['POST'])
@@ -28,6 +29,7 @@ def create_inventory():
 
 #Get
 @inventory_bp.route('/', methods=['GET'])
+@cache.cached(timeout=60)
 def get_all_inventory():
         query = select(Inventory)
         inventory = db.session.execute(query).scalars().all()
