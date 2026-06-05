@@ -24,6 +24,33 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/LoginCredentials"
+  
+  /customers: #endpoint
+    post: #post request
+      tags:
+        - customers
+      summary: "Endpointn to create/register a new customer"
+      description: "Endpoint to create a new customer in our mechanic shop"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Information required to create a new member"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateMemberPayload"
+      responses:
+        201:
+          descriptions: "Successful member creation"
+          schema: 
+            $ref: "#/definitions/CreateMemberResponse"
+          examples:
+            application/json:
+              id: 1
+              name: John Doe
+              phone: 1111111111
+              email: john@test.com
+              password: john123
+
 definitions:
 
   LoginCredentials:
@@ -47,5 +74,36 @@ definitions:
         type: "string"
       status:
         type: "string"
-      
+
+  CreateMemberPayload:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email: 
+        type: "string"
+      phone:
+        type: "string"
+      password:
+        type: "string"
+
+    required:
+      - name
+      - email
+      - phone 
+      - password
+
+  CreateMemberResponse:
+    type: "object"
+    properties:
+      id: 
+        type: 'int'
+      name:
+        type: 'string'
+      email: 
+        type: 'string'
+      phone: 
+        type: 'string'
+      password:
+        type: 'string'
 
