@@ -129,6 +129,40 @@ paths:
           examples:
             application/json:
               message: 'Successfully deleted customer <customer_id>.'
+
+  /customers/{customer_id}/my-tickets:
+    get:
+      tags: 
+        - Customers
+      summary: 'Endpoint to get all service tickets for a customer'
+      description: 'Endpoint retrieves all service tickets related to a specific customer, using customer id'
+      parameters:
+        - name: 'customer_id'
+          in: 'path'
+          required: true
+          type: 'integer'
+          description: 'ID of the customer'
+      security:
+        - bearerAuth = []
+      responses:
+        200:
+          description: 'Service tickets requested successfully'
+          schema:
+            $ref: '#/definitions/ServiceTicketsByCustomer'
+
+    #   /service-tickets/my-tickets:
+    # get:
+    #   tags:
+    #     - ServiceTickets
+    #   summary: 'Return all service-tickets'
+    #   description: 'Endpoint to retrieve all service tickets assigned to a specific customer id'
+    #   security:
+    #     - bearerAuth: []
+    #   responses:
+    #     200: 
+    #       description: 'Service tickets retrieved successfully'
+    #       schema:
+    #         $ref: '#/definitions/ServiceTicketsByCustomer'
   
   /mechanics:
 
@@ -273,20 +307,6 @@ paths:
           description: 'Retrieved all mechanics successfully'
           schema:
             $ref: '#/definitions/AllServiceTickets'
-
-  /service-tickets/my-tickets:
-    get:
-      tags:
-        - ServiceTickets
-      summary: 'Return all service-tickets'
-      description: 'Endpoint to retrieve all service tickets assigned to a specific customer id'
-      security:
-        - bearerAuth: []
-      responses:
-        200: 
-          description: 'Service tickets retrieved successfully'
-          schema:
-            $ref: '#/definitions/ServiceTicketsByCustomer'
   
   /service-tickets/{service_ticket_id}:
     put:
@@ -407,6 +427,29 @@ paths:
           examples:
             application/json:
               message: 'Successfully deleted inventory item <inventory_id>'
+
+    put:
+      tags:
+        - Inventory
+      summary: 'Endpoint that updates inventory'
+      desription: 'Endpoint that updates inventory data using the inventory id'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Information required to update inventory'
+        schema:
+          $ref: '#/definitions/UpdateInventoryPayload'
+      responses:
+        200:
+          description: 'Successfully updated inventory'
+          schema:
+            $ref: '#/definitions/UpdateInventoryResponse'
+          examples:
+            application/json:
+              id: 1
+              part-name: belt
+              price: 14.99
+
 definitions:
 
   LoginCredentials:
@@ -534,6 +577,23 @@ definitions:
       message:
         type: 'string'
 
+  ServiceTicketsByCustomer:
+      type: 'array'
+      items:
+        type: 'object'
+        properties:
+          id:
+            type: 'integer'
+          vin:
+            type: 'string'
+          service_date:
+            type: 'string'
+            format: 'date'
+          service_desc:
+            type: 'string'
+          customer_id:
+            type: 'integer'
+
   #Mechanic Definitions 
   CreateMechanicPayload:
     type: 'object'
@@ -646,6 +706,7 @@ definitions:
           type: 'string'
         phone:
           type: 'string'
+
 #ServiceTickets Definitions
 
   CreateServiceTicketPayload:
@@ -813,4 +874,26 @@ definitions:
     type: 'object'
     properties:
       message: 
+        type: 'string'
+
+  UpdateInventoryPayload:
+    type: 'object'
+    properties:
+      part-name:
+        type: 'string'
+      price: 
+        type: 'string'
+
+    required:
+      - part-name
+      - price
+
+  UpdateInventoryResponse:
+    type: 'object'
+    properties:
+      id:
+        type: 'integer'
+      part-name:
+        type: 'string'
+      price:
         type: 'string'

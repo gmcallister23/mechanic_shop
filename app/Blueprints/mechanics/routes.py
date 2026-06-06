@@ -101,13 +101,14 @@ def popular_mechanics():
     # for mechanic in mechanics: 
     #     print(mechanic.name, len(mechanic.service_tickets) )
 
-@mechanics_bp.route('/search', methods=['GET'])
-def search_mechanics():
-    name = request.args.get('name')
+#Optional search route - make sure to document if used
+# @mechanics_bp.route('/search', methods=['GET'])
+# def search_mechanics():
+#     name = request.args.get('name')
 
-    query = select(Mechanic).where(Mechanic.name.like(name))
-    #query = select(Mechanic).where(Mechanic.name.like(f'%{name}%')) this adds wildcards, so that anything that matches the search shows up
-    mechanics = db.session.execute(query).scalars().all()
+#     query = select(Mechanic).where(Mechanic.name.like(name))
+#     #query = select(Mechanic).where(Mechanic.name.like(f'%{name}%')) this adds wildcards, so that anything that matches the search shows up
+#     mechanics = db.session.execute(query).scalars().all()
 
-    return mechanics_schema.jsonify(mechanics)
+#     return mechanics_schema.jsonify(mechanics)
 
