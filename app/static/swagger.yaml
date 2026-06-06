@@ -21,7 +21,7 @@ paths:
   /customers/login:
   post:
     tags:
-      - customers
+      - Customers
     summary: "Login endpoint, (generates token)"
     description: "Validates customer credentials, generates and return a customer specific token"
     parameter:
@@ -35,7 +35,7 @@ paths:
   /customers: #endpoint
     post: #post request
       tags:
-        - customers
+        - Customers
       summary: "Endpoint to create/register a new customer"
       description: "Endpoint to create a new customer in our mechanic shop"
       parameters:
@@ -224,12 +224,13 @@ paths:
             application/json:
               message: 'Successfully deleted mechanic <mechanc_id>'
 
+  /mechanics/popular:
     get:
       tags:
         - Mechanics
       summary: 'Endpoint to retrieve popular mechanics'
       description: 'Endpoint to retrieve mechanics in order of popularity, based on how many tickets they show up in'
-      resposnes:
+      responses:
         200:
           description: 'Retrieved Mechanics successfully'
           schema:
