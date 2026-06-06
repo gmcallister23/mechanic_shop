@@ -172,7 +172,7 @@ paths:
     get:
       tags:
         - Mechanics
-      summary: 'Return specific mechanc_id by id'
+      summary: 'Return specific mechanc by id'
       description: 'Endpoint to retrieve specific mechanic by id'
       parameters:
         - name: mechanc_id
@@ -339,6 +339,74 @@ paths:
             application/json:
               message: 'Part added to ticket'
 
+  /inventory:
+    post:
+      tags:
+        - Inventory
+      summary: 'Endpoint to add inventory to database'
+      description: 'This endpoint adds inventory items to the database'
+      parameters: 
+        - in: 'body'
+          name: 'body'
+          description: 'Information required to create a new inventory item'
+          required: true
+          schema:
+            $ref: '#/definitions/CreateInventoryPayload'
+      responses:
+        - in: 'body'
+          name: 'body'
+          description: 'Information required to create a new inventory item.'
+          required: true
+          schema:
+            $ref: '#/definitions/CreateInventoryResponse'
+          examples:
+            application/json:
+              id: 1
+              part-name: belt
+              price: 14.99
+
+    get:
+      tags:
+        - Inventory
+      summary: 'Return all inventory items'
+      description: 'Endpoint to retrieve a list of all inventory items'
+      responses:
+        200:
+          description: 'Retrieved all inventory items successfully'
+          schema:
+            $ref: '#/definitions/AllInventory'
+
+  /inventory/{inventory_id}:
+    get:
+      tags:
+        - Inventory
+      summary: 'Return inventory items by id'
+      description: 'Endpoint to retrieve specific inventory item by id'
+      parameters:
+        - name: 'inventory_id'
+          in: 'path'
+          required: true
+          type: 'integer'
+          description: 'Id of the inventory item'
+      responses:
+        200:
+          description: 'Retrieved Inventory item successfully'
+          schema:
+            $ref:'#/definitions/InventoryById'
+    
+    delete:
+      tags: 
+        - Inventory
+      summary: 'Delete an inventory item'
+      description: 'Endpoint to delete an intentory item from the mechanic shop inventory'
+      responses:
+        200:
+          description: 'Successfully deleted inventory'
+          schema:
+            $ref: '#/definitions/DeleteInventoryResponse'
+          examples:
+            application/json:
+              message: 'Successfully deleted inventory item <inventory_id>'
 definitions:
 
   LoginCredentials:
@@ -695,3 +763,54 @@ definitions:
         - quantity
 
     #No definition response, because the route doesn't return a resource, it updates the junction table
+
+  #Inventory Definitions
+  CreateInventoryPayload:
+    type: 'object'
+    properties:
+      part-name:
+        type: 'string'
+      price:
+        type: 'string'
+    
+    required:
+      - part-name
+      - price
+  
+  CreateInventoryResponse:
+    type: 'object'
+    properties:
+      id: 
+        type: 'integer'
+      part-name:
+        type: 'string'
+      price:
+        type: 'string'  
+
+  AllInventory:
+    type: 'array'
+    items:
+      type: 'object'
+    properties:
+      id:
+        type: 'integer'
+      part-name:
+        type: 'string'
+      price: 
+        type: 'string'
+
+  InventoryById:
+    type: 'object'
+    properties:
+      id:
+        type: 'integer'
+      part-name:
+        type: 'string'
+      price: 
+        type: 'string'
+  
+  DeleteInventoryResponse:
+    type: 'object'
+    properties:
+      message: 
+        type: 'string'
