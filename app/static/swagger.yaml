@@ -7,9 +7,9 @@ host: "127.0.0.1:5000"
 schemes:
   - "http"
 consumes:
-  - "applications/json"
+  - "application/json"
 produces:
-  - "applications/json"
+  - "application/json"
 
 securityDefinitions:
   bearerAuth:
@@ -47,7 +47,7 @@ paths:
             $ref: "#/definitions/CreateCustomerPayload"
       responses:
         201:
-          descriptions: "Successful Customer creation"
+          description: "Successful Customer creation"
           schema: 
             $ref: "#/definitions/CreateCustomerResponse"
           examples:
