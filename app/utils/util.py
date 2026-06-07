@@ -35,16 +35,16 @@ def token_required(f):
             data = jwt.decode(token, SECRET_KEY, algorithms=['HS256'], options={"verify_signature": True})
             print(data)
             customer_id = data['sub']
-
-        except Exception as e: 
-             print("JWT FULL ERROR:", repr(e))
-             return jsonify({"message": "Invalid token"}), 400
             
         except jwt.ExpiredSignatureError as e: 
                 return jsonify({'message': 'token expired'}), 400
             
         except jwt.InvalidTokenError as e:
                 return jsonify({'message': 'Invalid token'}), 400
+        
+        except Exception as e: 
+             print("JWT FULL ERROR:", repr(e))
+             return jsonify({"message": "Invalid token"}), 400
             
         return f(customer_id, *args, **kwargs)
             
