@@ -27,6 +27,16 @@ class TestCustomer(unittest.TestCase):
         response = self.client.post('/customers/', json=customer_payload)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json['name'], "John Doe")
+    
+    #helper function for cleaner tests --> add anywhere there are headers for auth --> see update customer for example
+    def login(self):
+        credentials = {
+            "email": "test@test.com",
+            "password": "test"
+        }
+
+        response = self.client.post('/customers/login', json=credentials)
+        return response.json['token']
 
     def test_invalid_creation(self):
         customer_payload = {
@@ -46,9 +56,11 @@ class TestCustomer(unittest.TestCase):
         }
 
         response = self.client.post('/customers/login', json=credentials)
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['status'], 'success')
-        return response.json['token']
+        self.assertIn('token', response.json)
+        #return response.json['token']
     
     def test_invalid_login(self):
         credentials = {
@@ -59,3 +71,18 @@ class TestCustomer(unittest.TestCase):
         response = self.client.post('/customers/login', json=credentials)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json['message'], 'Invalid email or password!')
+    
+    def test_update_customer(self):
+        update_payload = {
+            "name": 'Peter',
+            "email": '',
+            "phone": '',
+            "password": ''
+        }
+
+        headers = {'Authorization': 'Bearer ' + self.login()}
+
+        response = self.client.put('/customers/1', json=update_payload, headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['name'], 'Peter')
+        self.assertEqual(response.json['email'], 'test@test.com')

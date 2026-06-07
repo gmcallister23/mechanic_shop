@@ -1,7 +1,7 @@
 import jwt
 from datetime import datetime, timezone, timedelta
 from functools import wraps
-from flask import request, jsonify
+from flask import request, jsonify, g
 
 
 
@@ -46,7 +46,8 @@ def token_required(f):
              print("JWT FULL ERROR:", repr(e))
              return jsonify({"message": "Invalid token"}), 400
             
-        return f(customer_id, *args, **kwargs)
+        g.customer_id = customer_id    
+        return f(*args, **kwargs)
             
         
         

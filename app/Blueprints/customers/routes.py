@@ -107,11 +107,13 @@ def update_customer(customer_id):
         return jsonify({'error': 'Customer not found.'}), 404
     
     try: 
-        customer_data = customer_schema.load(request.json)
+        customer_data = customer_schema.load(request.json, partial=True)
     except ValidationError as e:
         return jsonify(e.messages), 400
     
     for key, value in customer_data.items():
+        if value is None or value == '':
+            continue
         setattr(customer, key, value)
 
     db.session.commit()
