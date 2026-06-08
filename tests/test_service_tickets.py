@@ -30,7 +30,32 @@ class TestServiceTickets(unittest.TestCase):
 
         response = self.client.post('/customers/login', json=credentials)
         return response.json['token']
+    
+    def test_create_service_ticket(self):
+        service_ticket_payload = {
+            'vin': 'vintest',
+            'service_date': '1999-01-01',
+            'service_desc': 'test_description',
+            'customer_id': self.customer.id
+        }
 
+        response = self.client.post('/service_tickets/', json=service_ticket_payload)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json['service_date'], '1999-01-01')
+        self.assertEqual(response.json['vin'], 'vintest')
+        self.assertEqual(response.json['service_desc'], 'test_description')
+        self.assertEqual(response.json['customer_id'], self.customer.id)
+
+    def test_invalid_service_ticket(self):
+        service_ticket_payload = {
+            'vin': 'vintest',
+            'service_date': '1999-01-01',
+            'customer_id': self.customer.id
+        }
+
+        response = self.client.post('/service_tickets/', json=service_ticket_payload)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['service_desc'], ['Missing data or required fields'])
     def test_get_all_tickets_for_a_customer(self):
 
         headers = {
