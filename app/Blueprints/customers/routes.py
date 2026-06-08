@@ -1,6 +1,6 @@
 from .schemas import customer_schema, customers_schema, login_schema
 from ..service_tickets.schemas import service_tickets_schema
-from flask import request, jsonify
+from flask import request, jsonify, g
 from marshmallow import ValidationError
 from sqlalchemy import select
 from app.models import Customer, Service_ticket, db
@@ -90,7 +90,10 @@ def get_customer(customer_id):
 #Get all tickets for a specific customer
 @customers_bp.route('/my-tickets', methods=['GET'])
 @token_required
-def get_my_tickets(customer_id):
+def get_my_tickets():
+
+    customer_id = g.customer_id
+
     tickets = db.session.execute(select(Service_ticket).where(Service_ticket.customer_id == customer_id)).scalars().all()
 
     return jsonify(service_tickets_schema.dump(tickets)), 200

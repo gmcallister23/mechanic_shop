@@ -2,6 +2,7 @@ from app import create_app
 from app.models import db, Customer
 import unittest
 from app.utils.util import encode_token
+
 #from datetime import datetime
 
 class TestCustomer(unittest.TestCase):

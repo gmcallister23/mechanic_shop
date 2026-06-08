@@ -84,14 +84,15 @@ def get_service_tickets():
 
     return jsonify(service_tickets_schema.dump(service_tickets))
 
-@service_tickets_bp.route('/my-tickets', methods=['GET'])
-@token_required
-def get_my_service_tickets(customer_id):
-    query = select(Service_ticket).where(Service_ticket.customer_id == customer_id)
+#Already lives in customers
+# @service_tickets_bp.route('/my-tickets', methods=['GET'])
+# @token_required
+# def get_my_service_tickets(customer_id):
+#     query = select(Service_ticket).where(Service_ticket.customer_id == customer_id)
 
-    service_tickets = db.session.execute(query).scalars().all()
+#     service_tickets = db.session.execute(query).scalars().all()
 
-    return service_tickets_schema.jsonify(service_tickets), 200
+#     return service_tickets_schema.jsonify(service_tickets), 200
 
 
 @service_tickets_bp.route('/<int:service_ticket_id>/edit', methods=['PUT'])

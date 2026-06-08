@@ -70,6 +70,8 @@ def update_mechanic(mechanic_id):
         return jsonify(e.messages), 400
     
     for key, value in mechanic_data.items():
+        if value is None or value == '':
+            continue
         setattr(mechanic, key, value)
 
     db.session.commit()
