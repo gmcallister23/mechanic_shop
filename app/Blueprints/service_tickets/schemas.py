@@ -4,6 +4,7 @@ from marshmallow import fields
 import re 
 
 class Service_ticketSchema(ma.SQLAlchemyAutoSchema):
+    mechanics = fields.Nested('MechanicSchema', many=True)
     class Meta:
         model = Service_ticket 
         include_fk = True

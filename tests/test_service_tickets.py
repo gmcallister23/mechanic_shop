@@ -1,5 +1,5 @@
 from app import create_app
-from app.models import db, Service_ticket, Customer, Inventory, Service_ticketInventory
+from app.models import db, Service_ticket, Customer, Inventory, Service_ticketInventory, Mechanic
 import unittest
 from datetime import datetime
 #from app.utils.util import encode_token
@@ -16,14 +16,26 @@ class TestServiceTickets(unittest.TestCase):
             db.session.add(self.customer)
             db.session.commit()
 
+            self.customer_id = self.customer.id
+
             self.service_ticket = Service_ticket(vin='testvin', service_date=datetime.strptime('1900-01-01', '%Y-%m-%d').date(), service_desc='test_service', customer_id=self.customer.id)
         
             db.session.add(self.service_ticket)
             db.session.commit()
 
+            self.service_ticket_id = self.service_ticket.id
+
             self.inventory = Inventory(part_name='test_part', price='19.99')
             db.session.add(self.inventory)
             db.session.commit()
+
+            self.inventory_id = self.inventory.id
+
+            self.mechanic = Mechanic(name='test', email='m@test.com', phone='9876543210', title='test_title')
+            db.session.add(self.mechanic)
+            db.session.commit()
+
+            self.mechanic_id = self.mechanic.id
 
         self.client = self.app.test_client()
     
@@ -41,7 +53,7 @@ class TestServiceTickets(unittest.TestCase):
             'vin': 'vintest',
             'service_date': '1999-01-01',
             'service_desc': 'test_description',
-            'customer_id': self.customer.id
+            'customer_id': self.customer_id
         }
 
         response = self.client.post('/service_tickets/', json=service_ticket_payload)
@@ -49,18 +61,18 @@ class TestServiceTickets(unittest.TestCase):
         self.assertEqual(response.json['service_date'], '1999-01-01')
         self.assertEqual(response.json['vin'], 'vintest')
         self.assertEqual(response.json['service_desc'], 'test_description')
-        self.assertEqual(response.json['customer_id'], self.customer.id)
+        self.assertEqual(response.json['customer_id'], self.customer_id)
 
     def test_invalid_service_ticket(self):
         service_ticket_payload = {
             'vin': 'vintest',
             'service_date': '1999-01-01',
-            'customer_id': self.customer.id
+            'customer_id': self.customer_id
         }
 
         response = self.client.post('/service_tickets/', json=service_ticket_payload)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['service_desc'], ['Missing data or required fields'])
+        self.assertEqual(response.json['service_desc'], ['Missing data for required field.'])
     
     def get_all_service_tickets(self):
         response = self.client.get('/service_tickets')
@@ -79,15 +91,18 @@ class TestServiceTickets(unittest.TestCase):
     
     def test_add_mechanic_ticket(self):
         
+        
         ticket_update_payload = {
-            'add_mechanic_ids': [1],
+            'add_mechanic_ids': [self.mechanic_id],
             'remove_mechanic_ids': []
         }
 
         response = self.client.put('/service_tickets/1/edit', json=ticket_update_payload)
+        print(response.json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json['mechanics']), 1)
         self.assertEqual(response.json['mechanics'][0]['id'], 1)
+        
 
     def test_remove_mechanic_from_ticket(self):
         ticket_update_payload = {
@@ -97,20 +112,23 @@ class TestServiceTickets(unittest.TestCase):
 
         response = self.client.put('/service_tickets/1/edit', json=ticket_update_payload)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json['mechanics'], 0)
+
+        with self.app.app_context():
+            ticket = db.session.get(Service_ticket, self.service_ticket_id)
+            self.assertEqual(len(ticket.mechanics), 0)
 
     def test_add_inventory_to_ticket(self):
         inventory_payload = {
-            'inventory_id': self.inventory.id,
+            'inventory_id': self.inventory_id,
             'quantity': 3
         }
 
-        response = self.client.post(f'/service_tickets/{self.service_ticket.id}/add-inventory', json=inventory_payload)
+        response = self.client.post(f'/service_tickets/{self.service_ticket_id}/add-inventory', json=inventory_payload)
         self.assertEqual(response.status_code, 200)
 
         #Verfify db state for junction table
         with self.app.app_context():
-            result = db.session.query(Service_ticketInventory).filter_by(service_ticket_id=self.service_ticket.id, inventory_id=self.inventory.id).first()
+            result = db.session.query(Service_ticketInventory).filter_by(service_ticket_id=self.service_ticket_id, inventory_id=self.inventory_id).first()
         
         self.assertIsNotNone(result)
         self.assertEqual(result.quantity, 3)
