@@ -86,3 +86,20 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['name'], 'Peter')
         self.assertEqual(response.json['email'], 'test@test.com')
+
+    def test_get_all_customers(self):
+        response = self.client.get('/customers/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json[0]['name'], 'test_customer')
+
+    def test_delete_member(self):
+        headers = {'Authorization': 'Bearer ' + self.login()}
+        response = self.client.delete('/customers/1', headers=headers)
+        self.assertEqual(response.status_code, 200)
+
+    def test_get_customer_by_id(self):
+        response = self.client.get('/customers/1')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json['email'], 'test@test.com')
+
+    
