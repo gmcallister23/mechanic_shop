@@ -104,7 +104,7 @@ paths:
           name: 'customer_id'
           required: true
           type: 'integer'
-          
+
         - in: 'body'
           name: 'body'
           description: 'Information required to update a Customer'
@@ -131,6 +131,12 @@ paths:
       description: 'Endpoint to delete a customer.  Requires toke auth, Customer must be logged in to delete their account'
       security:
         - bearerAuth: []
+      
+        - in: 'path'
+          name: 'customer_id'
+          required: true
+          type: 'integer'
+          
       responses:
         200:
           description: 'Successfully Deleted Customer'
@@ -772,68 +778,68 @@ definitions:
         customer_id:
           type: 'string'
     
-    ServiceTicketsByCustomer:
-      type: 'array'
+  # ServiceTicketsByCustomer:
+  #   type: 'array'
+  #   items:
+  #     type: 'object'
+  #     properties:
+  #       id:
+  #         type: 'integer'
+  #       vin:
+  #         type: 'string'
+  #       service_date:
+  #         type: 'string'
+  #         format: 'date'
+  #       service_desc:
+  #         type: 'string'
+  #       customer_id:
+  #         type: 'integer'
+
+  UpdateServiceTicketPayload:
+    type: 'object'
+    properties:
+      add_mechanci_ids:
+         type: 'array'
       items:
-        type: 'object'
-        properties:
-          id:
-            type: 'integer'
-          vin:
-            type: 'string'
-          service_date:
-            type: 'string'
-            format: 'date'
-          service_desc:
-            type: 'string'
-          customer_id:
-            type: 'integer'
-
-    UpdateServiceTicketPayload:
-      type: 'object'
-      properties:
-        add_mechanci_ids:
-          type: 'array'
-          items:
-            type: 'integer'
+        type: 'integer'
         
-        remove_mechanic_ids:
-          type: 'array'
-          items:
-            type: 'integer'
+      remove_mechanic_ids:
+        type: 'array'
+        items:
+          type: 'integer'
             
-      required:
-        - vin
-        - service_date
-        - service_desc
-        - customer_id
+    required:
+      - vin
+      - service_date
+      - service_desc
+      - customer_id
 
-    UpdateServiceTicketResponse:
-      type: 'object'
-      properties:
-        id:
-          type: 'integer'
-        vin: 
-          type: 'string'
-        service_date:
-          type: 'string'
-          format: 'date'
-        service_desc:
-          type: 'string'
-        customer_id:
-          type: 'integer'
+  UpdateServiceTicketResponse:
+    type: 'object'
+    properties:
+      id:
+        type: 'integer'
+      vin: 
+        type: 'string'
+      service_date:
+        type: 'string'
+        format: 'date'
+      service_desc:
+        type: 'string'
+      customer_id:
+        type: 'integer'
 
-    AddInventoryPayload:
-      type: 'object'
-      properties:
-        inventory_id: 
-          type: 'integer'
-        quantity:
-          type: 'integer'
+  AddInventoryPayload:
+    type: 'object'
+    properties:
+      inventory_id: 
+        type: 'integer'
+      quantity:
+        type: 'integer'
       
-      required:
-        - inventory_id
-        - quantity
+    required:
+      - inventory_id
+      - quantity
 
     #No definition response, because the route doesn't return a resource, it updates the junction table
 
