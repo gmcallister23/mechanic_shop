@@ -13,7 +13,7 @@ class TestInventory(unittest.TestCase):
             db.drop_all()
             db.create_all()
 
-            self.inventory = Inventory(part_name='test_part', price='19.90')
+            self.inventory = Inventory(part_name='test_part', price=19.90)
             db.session.add(self.inventory)
             db.session.commit()
 
@@ -41,7 +41,11 @@ class TestInventory(unittest.TestCase):
         self.assertEqual(response.json['part_name'], ['Missing data for required field.'])
 
     def test_get_all_inventory(self):
-        response = self.client.get('/inventory')
+        response = self.client.get('/inventory/')
+        # print(response.json)
+        # print('STATUS:', response.status_code)
+        # print("JSON:", response.json)
+        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['part_name'], 'test_part')
 
@@ -52,13 +56,13 @@ class TestInventory(unittest.TestCase):
 
     def test_update_inventory(self):
         inventory_update_payload = {
-            'price': '14.99'
+            'price': 14.99
         }
 
         response = self.client.put(f'/inventory/{self.inventory_id}', json=inventory_update_payload)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json['price'], '14.99')
+        self.assertEqual(response.json['price'], 14.99)
 
-    def delete_inventory(self):
+    def test_delete_inventory(self):
         response = self.client.delete(f'/inventory/{self.inventory_id}')
         self.assertEqual(response.status_code, 200)

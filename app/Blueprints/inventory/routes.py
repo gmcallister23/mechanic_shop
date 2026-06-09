@@ -29,15 +29,17 @@ def create_inventory():
 
 #Get
 @inventory_bp.route('/', methods=['GET'])
-@cache.cached(timeout=60)
+#@cache.cached(timeout=60)
 def get_all_inventory():
         query = select(Inventory)
         inventory = db.session.execute(query).scalars().all()
 
-        return jsonify(inventory_schema.dump(inventory))
+        #print('INVENTORY:', inventory)
+
+        return jsonify(inventory_schemas.dump(inventory))
 
 
-@inventory_bp.route('/<int:invenotory_id>', methods=['GET'])
+@inventory_bp.route('/<int:inventory_id>', methods=['GET'])
 def get_inventory(inventory_id):
     inventory = db.session.get(Inventory, inventory_id)
 
@@ -54,7 +56,7 @@ def update_inventory(inventory_id):
         return jsonify({'error': 'Inventory part not found.'}), 404
     
     try:
-        inventory_data = inventory_schema.load(request.json)
+        inventory_data = inventory_schema.load(request.json, partial=True)
 
     except ValidationError as e:
          return jsonify(e.messages), 400

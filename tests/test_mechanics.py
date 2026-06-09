@@ -64,7 +64,7 @@ class TestMechanic(unittest.TestCase):
         response = self.client.delete('/mechanics/1')
         self.assertEqual(response.status_code, 200)
     
-    def get_popular_mechanics(self):
+    def test_get_popular_mechanics(self):
         response = self.client.get('/mechanics/popular')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json[0]['name'], 'test_mechanic')

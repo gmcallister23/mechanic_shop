@@ -98,7 +98,7 @@ def popular_mechanics():
 
     mechanics.sort(key= lambda mechanic: len(mechanic.service_tickets), reverse=True)#param : #expression ) 
     
-    return mechanic_schema.jsonify(mechanics)
+    return mechanics_schema.jsonify(mechanics)
 
     # for mechanic in mechanics: 
     #     print(mechanic.name, len(mechanic.service_tickets) )

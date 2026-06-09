@@ -102,5 +102,6 @@ class TestCustomer(unittest.TestCase):
         response = self.client.get('/customers/1')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json['email'], 'test@test.com')
+        print(response.json)
 
     
