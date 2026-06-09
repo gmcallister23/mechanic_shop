@@ -131,12 +131,12 @@ paths:
       description: 'Endpoint to delete a customer.  Requires toke auth, Customer must be logged in to delete their account'
       security:
         - bearerAuth: []
-      
+      parameters:
         - in: 'path'
           name: 'customer_id'
           required: true
           type: 'integer'
-          
+
       responses:
         200:
           description: 'Successfully Deleted Customer'
@@ -234,7 +234,7 @@ paths:
         200:
           description: 'Retrieved Mechanic Successfully'
           schema:
-            $ref: '#/definitions/Mechanic_by_id'
+            $ref: '#/definitions/MechanicsById'
 
     put:
       tags:
@@ -242,6 +242,10 @@ paths:
       summary: 'Endpoint to update a mechanic'
       description: 'Endpoint that updates mechanic data'
       parameters:
+        - in: 'path'
+          name: 'mechanic_id'
+          required: true
+          type: 'integer'
         - in: 'body'
           name: 'body'
           description: 'Information required to update a Mechanic'
@@ -265,6 +269,11 @@ paths:
         - Mechanics
       summary: 'Endpoint to delete mechanics'
       description: 'Enpoint to delete a mechanic, this removed the mechanic from the mechanic shop database'
+      parameters:
+        - in: 'path'
+          name: 'mechanc_id'
+          required: true
+          type: 'integer'
       responses:
         200:  
           description: 'Successfully Deleted Mechanic'
@@ -435,6 +444,11 @@ paths:
         - Inventory
       summary: 'Delete an inventory item'
       description: 'Endpoint to delete an intentory item from the mechanic shop inventory'
+      parameters:
+        - in: 'path'
+          name: 'inventory_id'
+          required: true
+          type: 'integer'
       responses:
         200:
           description: 'Successfully deleted inventory'
@@ -450,6 +464,11 @@ paths:
       summary: 'Endpoint that updates inventory'
       desription: 'Endpoint that updates inventory data using the inventory id'
       parameters:
+      - in: path
+        name: 'inventory_id'
+        required: true
+        type: 'integer'
+
       - in: 'body'
         name: 'body'
         description: 'Information required to update inventory'
