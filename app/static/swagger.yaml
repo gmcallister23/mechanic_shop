@@ -100,6 +100,11 @@ paths:
       security:
         - bearerAuth: []
       parameters:
+        - in: 'path'
+          name: 'customer_id'
+          required: true
+          type: 'integer'
+          
         - in: 'body'
           name: 'body'
           description: 'Information required to update a Customer'
