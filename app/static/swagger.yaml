@@ -218,19 +218,19 @@ paths:
           schema:
             $ref: '#/definitions/AllMechanics'
 
-  /mechanics/{mechanc_id}:
+  /mechanics/{mechanic_id}:
     get:
       tags:
         - Mechanics
       summary: 'Return specific mechanc by id'
       description: 'Endpoint to retrieve specific mechanic by id'
       parameters:
-        - name: mechanc_id
+        - name: mechanic_id
           in: path
           required: true
           type: integer
           description: ID of the mechanic
-      response:
+      responses:
         200:
           description: 'Retrieved Mechanic Successfully'
           schema:
@@ -437,7 +437,7 @@ paths:
         200:
           description: 'Retrieved Inventory item successfully'
           schema:
-            $ref:'#/definitions/InventoryById'
+            $ref: '#/definitions/InventoryById'
     
     delete:
       tags: 
@@ -902,7 +902,7 @@ definitions:
     properties:
       id:
         type: 'integer'
-      part-name:
+      part_name:
         type: 'string'
       price: 
         type: 'string'
