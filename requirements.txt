@@ -10,6 +10,7 @@ Flask-SQLAlchemy==3.1.1
 flask-swagger==0.2.14
 flask-swagger-ui==5.32.6
 greenlet==3.5.1
+gunicorn==26.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
 limits==5.8.0
@@ -19,7 +20,7 @@ marshmallow-sqlalchemy==1.5.0
 mysql-connector-python==9.7.0
 ordered-set==4.1.0
 packaging==26.2
-psyco2-binary==2.9.12
+psycopg2-binary==2.9.12
 PyJWT==2.13.0
 PyYAML==6.0.3
 SQLAlchemy==2.0.50
