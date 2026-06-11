@@ -2,10 +2,11 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 from flask import request, jsonify, g
+import os
 
 
 
-SECRET_KEY = 'super_secret_secrets_super_secret_secrets'
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'super_secret_secrets_super_secret_secrets'
 
 def encode_token(customer_id):
     payload = {
