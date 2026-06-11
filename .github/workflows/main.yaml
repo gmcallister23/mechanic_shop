@@ -20,6 +20,11 @@ jobs:
           python -m venv venv
           source venv/bin/activate
 
+      - name: Debug file structure
+        run: |
+          pwd
+          ls -R
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -49,6 +54,12 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
+
+      
+      - name: Debug file structure
+        run: |
+          pwd
+          ls -R
       
       - name: Install dependencies
         run: |
