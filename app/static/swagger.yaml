@@ -22,7 +22,7 @@ paths:
     post:
       tags:
         - Customers
-      summary: "Login endpoint, (generates token)"
+      summary: "Login endpoint, (generates token), provides to data"
       description: "Validates customer credentials, generates and return a customer specific token"
       parameters:
         - in: "body"
